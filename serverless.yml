@@ -20,12 +20,29 @@ service: todos-api-demo
 # Check out our docs for more details
 frameworkVersion: "3"
 
+custom:
+  tableName: todosTable
+
 provider:
   name: aws
   runtime: nodejs18.x
   profile: rdadair
   region: us-east-1
   stage: dev
+  environment:
+    DYNAMODB_TABLE: todosTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 plugins:
   - serverless-offline
@@ -61,23 +78,40 @@ plugins:
 #    - include-me-dir/**
 
 functions:
-  todos:
-    handler: src/api/todos.handler
+  create:
+    handler: src/api/create.create
     events:
-      - http:
+      - httpApi:
           path: /api/todos
-          method: GET
+          method: post
 
-  todo:
-    handler: src/api/todo.handler
+  list:
+    handler: src/api/list.list
     events:
-      - http:
-          path: /api/todo/{id}
-          method: GET
-          request:
-            parameters:
-              paths:
-                id: true
+      - httpApi:
+          path: /api/todos
+          method: get
+
+  get:
+    handler: src/api/get.get
+    events:
+      - httpApi:
+          path: /api/todos/{id}
+          method: get
+
+  update:
+    handler: src/api/update.update
+    events:
+      - httpApi:
+          path: /api/todos/{id}
+          method: put
+
+  delete:
+    handler: src/api/delete.delete
+    events:
+      - httpApi:
+          path: /api/todos/{id}
+          method: delete
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -119,12 +153,19 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
