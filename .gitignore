@@ -7,5 +7,7 @@ jspm_packages
 # Serverless directories
 .serverless
 
+.build
+
 # AWS
 AWSCLIV2.pkg
