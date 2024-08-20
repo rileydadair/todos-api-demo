@@ -36,16 +36,12 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - dynamodb:Query
-            - dynamodb:Scan
             - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 plugins:
   - serverless-offline
+  - serverless-plugin-typescript
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
@@ -78,40 +74,52 @@ plugins:
 #    - include-me-dir/**
 
 functions:
-  create:
-    handler: src/api/create.create
+  query:
+    handler: src/handler.graphqlHandler
     events:
-      - httpApi:
-          path: /api/todos
+      - http:
+          path: graphql
           method: post
-
-  list:
-    handler: src/api/list.list
-    events:
-      - httpApi:
-          path: /api/todos
+      - http:
+          path: graphql
           method: get
 
-  get:
-    handler: src/api/get.get
-    events:
-      - httpApi:
-          path: /api/todos/{id}
-          method: get
+# functions:
+#   create:
+#     handler: src/api/create.create
+#     events:
+#       - httpApi:
+#           path: /api/todos
+#           method: post
 
-  update:
-    handler: src/api/update.update
-    events:
-      - httpApi:
-          path: /api/todos/{id}
-          method: put
+#   list:
+#     handler: src/api/list.list
+#     events:
+#       - httpApi:
+#           path: /api/todos
+#           method: get
 
-  delete:
-    handler: src/api/delete.delete
-    events:
-      - httpApi:
-          path: /api/todos/{id}
-          method: delete
+#   get:
+#     handler: src/api/get.get
+#     events:
+#       - httpApi:
+#           path: /api/todos/{id}
+#           method: get
+
+#   update:
+#     handler: src/api/update.update
+#     events:
+#       - httpApi:
+#           path: /api/todos/{id}
+#           method: put
+
+#   delete:
+#     handler: src/api/delete.delete
+#     events:
+#       - httpApi:
+#           path: /api/todos/{id}
+#           method: delete
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
