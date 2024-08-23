@@ -12,7 +12,8 @@
     "apollo-server-core": "^3.13.0",
     "apollo-server-lambda": "^2.16.1",
     "graphql": "^15.3.0",
-    "source-map-support": "^0.5.10"
+    "source-map-support": "^0.5.10",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",

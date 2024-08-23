@@ -1,7 +1,2 @@
-import { todo } from "./todo";
-
-export const resolvers = {
-  Query: {
-    todo,
-  },
-};
+export * from "./todo";
+export * from "./todos";
