@@ -1,12 +1,13 @@
-import { create } from "./mutations";
+import { createTodo, deleteTodo, updateTodo } from "./mutations";
 import { todo, todos } from "./queries";
 
 const resolvers = {
   Mutation: {
-    create: create,
+    createTodo: createTodo,
+    deleteTodo: deleteTodo,
+    updateTodo: updateTodo,
   },
   Query: {
-    hello: () => "Hello world!",
     todo: todo,
     todos: todos,
   },

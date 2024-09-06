@@ -1,7 +1,7 @@
 import { dynamoDb, promisify } from "../../utils";
 const uuid = require("uuid");
 
-export const create = (_, { text }) => {
+const createTodo = (_, { text }) => {
   const timestamp = new Date().getTime();
 
   const params = {
@@ -24,7 +24,9 @@ export const create = (_, { text }) => {
       };
     }
     return {
-      message: `Todo item: ${text} created`,
+      message: `Todo item created: '${text}'`,
     };
   });
 };
+
+export { createTodo };

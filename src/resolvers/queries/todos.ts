@@ -1,6 +1,6 @@
 import { dynamoDb, promisify } from "../../utils";
 
-export const todos = (_) => {
+const todos = (_) => {
   return promisify((callback) => {
     dynamoDb.scan(
       {
@@ -15,3 +15,5 @@ export const todos = (_) => {
     return result.Items;
   });
 };
+
+export { todos };

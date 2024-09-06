@@ -1,6 +1,6 @@
 import { dynamoDb, promisify } from "../../utils";
 
-export const todo = (_, { id }) => {
+const todo = (_, { id }) => {
   return promisify((callback) => {
     dynamoDb.get(
       {
@@ -16,3 +16,5 @@ export const todo = (_, { id }) => {
     return result.Item;
   });
 };
+
+export { todo };
